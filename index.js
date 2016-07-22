@@ -106,29 +106,39 @@ module.exports = postcss.plugin("postcss-shared-options", function (opts) {
     });
     return Promise.all(confs.map((conf)=> readShared(conf, opts.from || "")))
       .then(
-        // Unsafe merge
-        (args)=> _.reduce(args, (memo, item)=>  _.merge(memo, item), {}))
+        (args)=> {
+          return _.reduce(args, (memo, item)=>  {
+            const ptr = _.find(memo, (it)=> it.path === item.path);
+            if (ptr) {
+              ptr.groups = _.merge(ptr.groups, item.groups);
+            } else {
+              memo = memo.concat(item);
+            }
+            return memo;
+          }, []);
+        })
       .then(
-        (c)=> {
-          const conf = c.groups;
-          const hashImport = md5(c.file + hash);
+        (imports)=> {
           const mapVars = {};
-
-          css.prepend({
-            type: "rule",
-            selector: ":root",
-            nodes: _.reduce(conf, (memo, vars)=> {
-              const buf = _.map(vars, (value, p)=> {
-                const prop = p + "-" + hashImport;
-                mapVars[p] = prop;
-                return {
-                  value, prop,
-                  type: "decl",
-                  raws: { before: "\n  " }
-                };
-              });
-              return memo.concat(buf);
-            }, [])
+          imports.forEach((c)=> {
+            const conf = c.groups;
+            const hashImport = md5(c.file + hash);
+            css.prepend({
+              type: "rule",
+              selector: ":root",
+              nodes: _.reduce(conf, (memo, vars)=> {
+                const buf = _.map(vars, (value, p)=> {
+                  const prop = p + "-" + hashImport;
+                  mapVars[p] = prop;
+                  return {
+                    value, prop,
+                    type: "decl",
+                    raws: { before: "\n  " }
+                  };
+                });
+                return memo.concat(buf);
+              }, [])
+            });
           });
 
           css.walkDecls((decl)=> {
