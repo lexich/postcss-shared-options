@@ -1,48 +1,10 @@
 const postcss = require("postcss");
-const path = require("path");
-const fs = require("fs");
 const parser  = require("postcss-value-parser");
 const _ = require("lodash");
-const crypto = require("crypto");
 
 const parseExpression = require("./lib/parseExpression");
-
-function readSharedCSS(filePath) {
-  return new Promise(
-    (resolve, reject)=> fs.readFile(filePath, "utf8",
-      (err, data)=> err ? reject(err) : resolve(data))
-  ).then(
-    (data)=> new Promise(
-      (resolve)=> postcss([]).process(data).then(resolve)));
-}
-
-function readShared(conf, from) {
-  const dir = path.dirname(from);
-  const absPath = path.resolve(dir, conf.path);
-  return readSharedCSS(absPath).then((css)=> {
-    const result = {};
-    Object.keys(conf.values).forEach((key)=> {
-      const values = conf.values[key];
-      css.root.nodes.forEach((node)=> {
-        if (node.type === "rule" && node.selector === `:${key}`) {
-          node.nodes.forEach((n)=> {
-            if (n.type === "decl" && values.indexOf(n.prop) > -1) {
-              result[key] || (result[key] = {});
-              result[key][n.prop] = n.value;
-            }
-          });
-        }
-      });
-    });
-    return { path: absPath, groups: result };
-  });
-}
-
-function md5(val) {
-  const md5sum = crypto.createHash("md5");
-  md5sum.update(val);
-  return md5sum.digest("hex").slice(0, 6);
-}
+const md5 = require("./lib/md5");
+const readShared = require("./lib/readShared").readShared;
 
 module.exports = postcss.plugin("postcss-shared-options", function (opts) {
   opts = opts || {};
