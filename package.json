@@ -1,0 +1,31 @@
+{
+  "name": "postcss-shared-options",
+  "version": "0.0.0",
+  "description": "PostCSS plugin Share variables between different css files with scope",
+  "keywords": [
+    "postcss",
+    "css",
+    "postcss-plugin",
+    "variables"
+  ],
+  "author": "Efremov Alexey <lexich121@gmail.com>",
+  "license": "MIT",
+  "repository": "lexich/postcss-shared-options",
+  "bugs": {
+    "url": "https://github.com/lexich/postcss-shared-options/issues"
+  },
+  "homepage": "https://github.com/lexich/postcss-shared-options",
+  "dependencies": {
+    "lodash": "^4.13.1",
+    "postcss": "^5.1.0",
+    "postcss-value-parser": "^3.3.0"
+  },
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "eslint": "^3.1.1",
+    "eslint-config-postcss": "^2.0.2"
+  },
+  "scripts": {
+    "test": "ava && eslint *.js"
+  }
+}

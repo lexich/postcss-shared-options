@@ -1,0 +1,8 @@
+:root {
+    --color-red: red;
+    --base-width: 24px;
+};
+
+:base {
+    --base-width: 25px;
+};

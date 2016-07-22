@@ -1,0 +1,7 @@
+{
+  "extends": "eslint-config-postcss/es5",
+  "rules": {
+    "indent": ["error", 2],
+    "quotes": [2, "double", "avoid-escape"]
+  }
+}
