@@ -5,57 +5,7 @@ const parser  = require("postcss-value-parser");
 const _ = require("lodash");
 const crypto = require("crypto");
 
-function error(msg) {
-  console.error(msg);
-  throw new Error(msg);
-}
-
-function extractFromQuotes(expr) {
-  if (!expr) {
-    error();
-    return expr;
-  }
-  const quote = expr[0];
-  if (!(quote === "\"" || quote !== "\'")) {
-    error();
-    return expr;
-  }
-  if (expr[expr.length - 1] !== quote) {
-    error();
-  }
-  return expr.slice(1, expr.length - 1);
-}
-
-function parseExpression(expr) {
-  if (!expr) {
-    error();
-  }
-  const pieces = expr.split("from");
-  if (pieces.length !== 2) {
-    error();
-  }
-  const params = pieces[0].trim();
-  const filePath = extractFromQuotes(pieces[1].trim());
-
-  const p = parser(params);
-
-
-  const values = p.nodes ? p.nodes.reduce((memo, node)=> {
-    if (node.type === "function") {
-      const name = node.value;
-      !memo[name] && (memo[name] = []);
-      node.nodes.forEach((valNode)=> {
-        if (valNode.type === "word") {
-          if (memo[name].indexOf(valNode.value) === -1) {
-            memo[name].push(valNode.value);
-          }
-        }
-      });
-    }
-    return memo;
-  }, {}) : {};
-  return { values: values, path: filePath };
-}
+const parseExpression = require("./lib/parseExpression");
 
 function readSharedCSS(filePath) {
   return new Promise(

@@ -26,6 +26,6 @@
     "eslint-config-postcss": "^2.0.2"
   },
   "scripts": {
-    "test": "ava && eslint *.js"
+    "test": "ava && eslint *.js lib/*.js"
   }
 }
