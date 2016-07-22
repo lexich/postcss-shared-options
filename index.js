@@ -57,28 +57,19 @@ function parseExpression(expr) {
   return { values: values, path: filePath };
 }
 
-
-const reader = {
-  cache: {},
-  readShared(filePath) {
-    if (this.cache[filePath]) {
-      return this.cache[filePath];
-    }
-    const conf = new Promise(
-      (resolve, reject)=> fs.readFile(filePath, "utf8",
-        (err, data)=> err ? reject(err) : resolve(data))
-    ).then((data)=> new Promise((resolve)=> {
-      postcss([]).process(data).then(resolve);
-    }));
-    this.cache[filePath] = conf;
-    return conf;
-  }
-};
+function readSharedCSS(filePath) {
+  return new Promise(
+    (resolve, reject)=> fs.readFile(filePath, "utf8",
+      (err, data)=> err ? reject(err) : resolve(data))
+  ).then((data)=> new Promise((resolve)=> {
+    postcss([]).process(data).then(resolve);
+  }));
+}
 
 function readShared(conf, from) {
   const dir = path.dirname(from);
   const absPath = path.resolve(dir, conf.path);
-  return reader.readShared(absPath).then((css)=> {
+  return readSharedCSS(absPath).then((css)=> {
     const result = {};
     Object.keys(conf.values).forEach((key)=> {
       const values = conf.values[key];
