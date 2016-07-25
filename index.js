@@ -1,10 +1,10 @@
-const postcss = require("postcss");
-const parser  = require("postcss-value-parser");
-const _ = require("lodash");
+import postcss from "postcss";
+import parser from "postcss-value-parser";
+import _ from "lodash";
 
-const parseExpression = require("./lib/parseExpression");
-const md5 = require("./lib/md5");
-const readShared = require("./lib/readShared").readShared;
+import parseExpression from "./lib/parseExpression";
+import md5 from "./lib/md5";
+import { readShared } from "./lib/readShared";
 
 module.exports = postcss.plugin("postcss-shared-options", function (opts) {
   opts = opts || {};
@@ -22,7 +22,7 @@ module.exports = postcss.plugin("postcss-shared-options", function (opts) {
           return _.reduce(args, (memo, item)=>  {
             const ptr = _.find(memo, (it)=> it.path === item.path);
             if (ptr) {
-              ptr.groups = _.merge(ptr.groups, item.groups);
+              ptr.values = _.merge(ptr.values, item.values);
             } else {
               memo = memo.concat(item);
             }
@@ -37,7 +37,7 @@ module.exports = postcss.plugin("postcss-shared-options", function (opts) {
             css.prepend({
               type: "rule",
               selector: ":root",
-              nodes: _.reduce(c.groups, (memo, value, p)=> {
+              nodes: _.reduce(c.values, (memo, value, p)=> {
                 const prop = p + "-" + hashImport;
                 mapVars[p] = prop;
                 memo[memo.length] = {
