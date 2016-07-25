@@ -1,12 +1,12 @@
 :root {
-  --color-red-8cd633: red;
-  --base-width-8cd633: 24px;
+  --color-red-4f57a5: red;
+  --base-width-4f57a5: 24px;
 }
 
 .test1 {
-  color: var(--color-red-8cd633);
+  color: var(--color-red-4f57a5);
 }
 
 .test2 {
-  width: var(--base-width-8cd633);
+  width: var(--base-width-4f57a5);
 }

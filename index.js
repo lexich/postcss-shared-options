@@ -33,22 +33,19 @@ module.exports = postcss.plugin("postcss-shared-options", function (opts) {
         (imports)=> {
           const mapVars = {};
           imports.forEach((c)=> {
-            const conf = c.groups;
             const hashImport = md5(c.file + hash);
             css.prepend({
               type: "rule",
               selector: ":root",
-              nodes: _.reduce(conf, (memo, vars)=> {
-                const buf = _.map(vars, (value, p)=> {
-                  const prop = p + "-" + hashImport;
-                  mapVars[p] = prop;
-                  return {
-                    value, prop,
-                    type: "decl",
-                    raws: { before: "\n  " }
-                  };
-                });
-                return memo.concat(buf);
+              nodes: _.reduce(c.groups, (memo, value, p)=> {
+                const prop = p + "-" + hashImport;
+                mapVars[p] = prop;
+                memo[memo.length] = {
+                  value, prop,
+                  type: "decl",
+                  raws: { before: "\n  " }
+                };
+                return memo;
               }, [])
             });
           });

@@ -1,5 +1,4 @@
-@shared root(--color-red) from "./base.vars.css";
-@shared root(--base-width) from "./base.vars.css";
+@shared --color-red, --base-width from "./base.vars.css";
 
 .test1 {
   color: var(--color-red);
