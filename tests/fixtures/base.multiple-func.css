@@ -1,0 +1,5 @@
+@shared --base-width from "./base.vars.css";
+
+.test {
+  width: calc(var(--base-width) * 2);
+}

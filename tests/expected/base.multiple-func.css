@@ -1,0 +1,6 @@
+:root {
+  --base-width-19ac5d: 24px;
+}
+.test {
+  width: calc(var(--base-width-19ac5d) * 2);
+}
