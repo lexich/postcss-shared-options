@@ -1,4 +1,4 @@
-export default function extractFromQuotes(expr: string) : string {
+export default function extractFromQuotes(expr: string): string {
   if (!expr) {
     return expr;
   }

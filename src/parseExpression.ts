@@ -3,14 +3,14 @@ import parser = require("postcss-value-parser");
 
 import extractFromQuotes from "./extractFromQuotes";
 
-const emptyVariables : ParserNodes = { values: [], path: "" };
+const emptyVariables: ParserNodes = { values: [], path: "" };
 
 export declare interface ParserNodes {
-  values: Array<string>,
-  path: string
+  values: Array<string>;
+  path: string;
 }
 
-export default function parseExpression(expr: string) : ParserNodes {
+export default function parseExpression(expr: string): ParserNodes {
   if (!expr) {
     return emptyVariables;
   }
@@ -21,7 +21,7 @@ export default function parseExpression(expr: string) : ParserNodes {
   const params = pieces[0].trim();
   const filePath = extractFromQuotes(pieces[1].trim());
   const p = parser(params);
-  const values = p.nodes ? p.nodes.reduce((memo, node)=> {
+  const values = p.nodes ? p.nodes.reduce((memo, node) => {
     if (node.type === "word") {
       if (memo.indexOf(node.value) === -1) {
         memo[memo.length] = node.value;
