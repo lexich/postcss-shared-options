@@ -1,7 +1,36 @@
 {
+  "parser": "babel-eslint",
+  "plugins": [
+      "flowtype"
+  ],
   "extends": "eslint-config-postcss/es5",
   "rules": {
     "indent": ["error", 2],
-    "quotes": [2, "double", "avoid-escape"]
+    "quotes": [2, "double", "avoid-escape"],
+    "flowtype/require-parameter-type": 1,
+    "flowtype/require-return-type": [
+        1,
+        "always",
+        {
+            "annotateUndefined": "never"
+        }
+    ],
+    "flowtype/space-after-type-colon": [
+        1,
+        "always"
+    ],
+    "flowtype/space-before-type-colon": [
+        1,
+        "never"
+    ],
+    "flowtype/type-id-match": [
+        1,
+        "^([A-Z][a-z0-9]+)+Type$"
+    ]
+  },
+  "settings": {
+      "flowtype": {
+          "onlyFilesWithFlowAnnotation": false
+      }
   }
 }

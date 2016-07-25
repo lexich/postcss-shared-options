@@ -1,6 +1,6 @@
 // @flow
 import test  from "ava";
-import md5 from "../lib/md5";
+import md5 from "../src/md5";
 
 test("test md5", t => {
   t.is(

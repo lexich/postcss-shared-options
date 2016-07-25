@@ -2,21 +2,34 @@ import postcss from "postcss";
 import parser from "postcss-value-parser";
 import _ from "lodash";
 
-import parseExpression from "./lib/parseExpression";
-import md5 from "./lib/md5";
-import { readShared } from "./lib/readShared";
+import parseExpression from "./parseExpression";
+import md5 from "./md5";
+import { readShared } from "./readShared";
 
-module.exports = postcss.plugin("postcss-shared-options", function (opts) {
+type PostcssoptionsType = { from: string };
+
+declare class PostcssClass {
+  walkAtRules(node: string, f: *): void;
+}
+
+declare class PostcssnodeClass {
+
+}
+
+
+function plugin(opts: PostcssoptionsType) : * {
   opts = opts || {};
-  return function (css) {
+  return function (css: PostcssClass) : * {
     const hash = md5(css.source.input.css);
     const confs = [];
-    css.walkAtRules("shared", (shared)=> {
+    css.walkAtRules("shared", (shared: PostcssnodeClass)=> {
       const expr = parseExpression(shared.params);
       expr && confs.push(expr);
       shared.remove();
     });
-    return Promise.all(confs.map((conf)=> readShared(conf, opts.from || "")))
+    return Promise.all(confs.map(
+      (conf)=> readShared(conf, opts.from || "")
+    ))
       .then(
         (args)=> {
           return _.reduce(args, (memo, item)=>  {
@@ -67,4 +80,6 @@ module.exports = postcss.plugin("postcss-shared-options", function (opts) {
           });
         });
   };
-});
+}
+
+export default postcss.plugin("postcss-shared-options", plugin);

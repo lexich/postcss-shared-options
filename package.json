@@ -9,6 +9,7 @@
     "variables"
   ],
   "author": "Efremov Alexey <lexich121@gmail.com>",
+  "main": "lib/index.js",
   "license": "MIT",
   "repository": "lexich/postcss-shared-options",
   "bugs": {
@@ -23,6 +24,7 @@
   "devDependencies": {
     "ava": "^0.15.2",
     "babel-cli": "^6.11.4",
+    "babel-eslint": "^6.1.2",
     "babel-plugin-espower": "^2.3.1",
     "babel-plugin-transform-flow-strip-types": "^6.8.0",
     "babel-plugin-transform-runtime": "^6.9.0",
@@ -30,10 +32,14 @@
     "babel-preset-stage-0": "^6.5.0",
     "eslint": "^3.1.1",
     "eslint-config-postcss": "^2.0.2",
+    "eslint-plugin-flowtype": "^2.3.1",
     "flow-bin": "^0.29.0"
   },
   "scripts": {
-    "test": "ava ./tests && eslint *.js lib/*.js"
+    "test": "npm run eslint && npm run ava",
+    "ava": "ava ./tests",
+    "eslint": "eslint src/*.js",
+    "compile": "node_modules/.bin/babel src --out-dir lib"
   },
   "babel": {
     "presets": [
@@ -51,8 +57,7 @@
       "tests/*.js"
     ],
     "source": [
-      "index.js",
-      "lib/*.js"
+      "src/*.js"
     ],
     "require": [
       "babel-register"
