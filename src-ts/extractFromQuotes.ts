@@ -1,6 +1,4 @@
-// @flow
-
-module.exports = function extractFromQuotes(expr: string) : string {
+export default function extractFromQuotes(expr: string) : string {
   if (!expr) {
     return expr;
   }
@@ -12,4 +10,4 @@ module.exports = function extractFromQuotes(expr: string) : string {
     return expr;
   }
   return expr.slice(1, expr.length - 1);
-};
+}

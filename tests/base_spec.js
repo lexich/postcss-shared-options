@@ -1,7 +1,7 @@
 import postcss from "postcss";
 import test  from "ava";
 import fs    from "fs";
-import plugin from "../src";
+import plugin from "../lib";
 
 function run(t, inputPath, outputPath, opts = { }) {
   opts.from = inputPath;

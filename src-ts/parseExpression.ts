@@ -1,11 +1,16 @@
-// @flow
+///<reference path="../typings/postcss-value-parser.d.ts" />
+import parser = require("postcss-value-parser");
 
-import parser from "postcss-value-parser";
 import extractFromQuotes from "./extractFromQuotes";
 
-const emptyVariables: VariablesType = { values: [], path: "" };
+const emptyVariables : ParserNodes = { values: [], path: "" };
 
-export default function parseExpression(expr: string) : VariablesType {
+export declare interface ParserNodes {
+  values: Array<string>,
+  path: string
+}
+
+export default function parseExpression(expr: string) : ParserNodes {
   if (!expr) {
     return emptyVariables;
   }
@@ -15,7 +20,6 @@ export default function parseExpression(expr: string) : VariablesType {
   }
   const params = pieces[0].trim();
   const filePath = extractFromQuotes(pieces[1].trim());
-
   const p = parser(params);
   const values = p.nodes ? p.nodes.reduce((memo, node)=> {
     if (node.type === "word") {
@@ -26,4 +30,4 @@ export default function parseExpression(expr: string) : VariablesType {
     return memo;
   }, []) : [];
   return { values: values, path: filePath };
-};
+}

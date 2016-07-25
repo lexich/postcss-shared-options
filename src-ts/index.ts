@@ -1,28 +1,29 @@
-import postcss from "postcss";
-import parser from "postcss-value-parser";
-import _ from "lodash";
+///<reference path="../typings/lodash/lodash.d.ts" />
+import * as _ from "lodash";
 
-import parseExpression from "./parseExpression";
+import { plugin, Container, Result, Input } from "postcss";
+
+
+import * as postcss from "postcss";
 import md5 from "./md5";
-import { readShared } from "./readShared";
+import parser = require("postcss-value-parser");
+import parseExpression, { ParserNodes } from "./parseExpression";
+import readShared from "./readShared";
 
-type PostcssoptionsType = { from: string };
 
-declare class PostcssClass {
-  walkAtRules(node: string, f: *): void;
+declare interface Option {
+  from: string
 }
 
-declare class PostcssnodeClass {
-
+declare interface FakeInput extends Input {
+  css: string
 }
 
-
-function plugin(opts: PostcssoptionsType) : * {
-  opts = opts || {};
-  return function (css: PostcssClass) : * {
+export default plugin("postcss-shared-options", function(opts: Option) {
+  return function(css: Container) {
     const hash = md5(css.source.input.css);
-    const confs = [];
-    css.walkAtRules("shared", (shared: PostcssnodeClass)=> {
+    const confs: Array<ParserNodes> = [];
+    css.walkAtRules("shared", (shared)=> {
       const expr = parseExpression(shared.params);
       expr && confs.push(expr);
       shared.remove();
@@ -44,7 +45,7 @@ function plugin(opts: PostcssoptionsType) : * {
         })
       .then(
         (imports)=> {
-          const mapVars = {};
+          const mapVars: { [key: string]: string } = {};
           imports.forEach((c)=> {
             const hashImport = md5(c.file + hash);
             css.prepend({
@@ -80,6 +81,8 @@ function plugin(opts: PostcssoptionsType) : * {
           });
         });
   };
-}
+});
 
-export default postcss.plugin("postcss-shared-options", plugin);
+
+
+

@@ -32,35 +32,23 @@
     "babel-preset-stage-0": "^6.5.0",
     "eslint": "^3.1.1",
     "eslint-config-postcss": "^2.0.2",
-    "eslint-plugin-flowtype": "^2.3.1",
-    "flow-bin": "^0.29.0"
+    "lodash": "^4.14.0",
+    "tsd": "^0.6.5",
+    "typescript": "^1.8.10"
   },
   "scripts": {
     "test": "npm run eslint && npm run ava",
     "ava": "ava ./tests",
+    "tsc": "tsc --outDir lib src-ts/*.ts",
     "eslint": "eslint src/*.js",
     "compile": "node_modules/.bin/babel src --out-dir lib"
-  },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0"
-    ],
-    "plugins": [
-      "transform-flow-strip-types",
-      "espower",
-      "transform-runtime"
-    ]
   },
   "ava": {
     "files": [
       "tests/*.js"
     ],
     "source": [
-      "src/*.js"
-    ],
-    "require": [
-      "babel-register"
+      "lib/*.js"
     ]
   }
 }
