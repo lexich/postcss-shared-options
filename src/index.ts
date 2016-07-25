@@ -9,7 +9,7 @@ import * as postcss from "postcss";
 import md5 from "./md5";
 import parser = require("postcss-value-parser");
 import parseExpression, { ParserNodes } from "./parseExpression";
-import readShared from "./readShared";
+import readVariables from "./readVariables";
 
 
 declare interface Option {
@@ -27,7 +27,17 @@ export default plugin("postcss-shared-options", function(opts: Option) {
       shared.remove();
     });
     return Promise.all(confs.map(
-      (conf) => readShared(conf, opts.from || "")
+      (conf) => readVariables(conf.path, opts.from || "")
+        .then((vars)=> {
+          const buf: { [key: string]: string } = {};
+          const values = _.reduce(vars.values, (memo, val, key) => {
+            if (conf.values.indexOf(key) > -1) {
+              memo[key] = val;
+            }
+            return memo;
+          }, buf);
+          return { path: vars.path, values };
+        })
     ))
       .then(
         (args) => {
