@@ -46,19 +46,26 @@ export default plugin("postcss-shared-options", function(opts: Option) {
           const mapVars: { [key: string]: string } = {};
           imports.forEach((c) => {
             const hashImport = md5(c.file + hash);
-            css.prepend({
-              type: "rule",
-              selector: ":root",
-              nodes: _.reduce(c.values, (memo, value, p) => {
-                const prop = p + "-" + hashImport;
-                mapVars[p] = prop;
-                memo[memo.length] = {
-                  value, prop,
-                  type: "decl",
-                  raws: { before: "\n  " }
-                };
-                return memo;
-              }, [])
+
+            let rootRule: postcss.Rule = null;
+            css.walkRules(":root", (root) => {
+              !rootRule && (rootRule = root);
+            });
+            if (!rootRule) {
+              rootRule = postcss.rule({
+                selector: ":root"
+              });
+              css.prepend(rootRule);
+            }
+
+            _.each(c.values, (value, p) => {
+              const prop = p + "-" + hashImport;
+              mapVars[p] = prop;
+              const decl = postcss.decl({
+                value, prop,
+                raws: { before: "\n  " }
+              });
+              rootRule.append(decl);
             });
           });
 

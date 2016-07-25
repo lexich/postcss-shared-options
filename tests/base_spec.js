@@ -16,10 +16,23 @@ function run(t, inputPath, outputPath, opts = { }) {
     });
 }
 
-test("does something", t => {
-
+test("test base.css", t => {
   return run(t,
     "fixtures/base.css",
     "expected/base.css"
+  );
+});
+
+test("test base.2.css", t => {
+  return run(t,
+    "fixtures/base.2.css",
+    "expected/base.2.css"
+  );
+});
+
+test("test base.3.css", t => {
+  return run(t,
+    "fixtures/base.3.css",
+    "expected/base.3.css"
   );
 });

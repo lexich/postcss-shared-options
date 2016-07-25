@@ -1,4 +1,3 @@
-// @flow
 import test  from "ava";
 import md5 from "../lib/md5";
 
