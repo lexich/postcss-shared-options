@@ -39,8 +39,8 @@
     "tslint": "node_modules/.bin/tslint src/*.ts",
     "ava": "node_modules/.bin/ava ./tests",
     "tsc": "node_modules/.bin/tsc --outDir lib src/*.ts",
-    "compile": "node_modules/.bin/tsc",
-    "watch": "node_modules/.bin/tsc -watch"
+    "compile": "node_modules/.bin/tsc --project tsconfig.json",
+    "watch": "node_modules/.bin/tsc -watch --project tsconfig.json"
   },
   "ava": {
     "files": [
