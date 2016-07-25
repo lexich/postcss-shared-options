@@ -1,0 +1,14 @@
+:root {
+  --current-height: 3px;
+  --color-red-19ac5d: red;
+  --base-width-19ac5d: 24px;
+}
+
+.test1 {
+  color: var(--color-red-19ac5d);
+}
+
+.test2 {
+  width: var(--base-width-19ac5d);
+  height: var(--current-height);
+}
