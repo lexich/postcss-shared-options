@@ -3,11 +3,12 @@
 
 import * as _ from "lodash";
 
-import { plugin, Container, Result } from "postcss";
+import { plugin, Container, Result, Declaration } from "postcss";
 
 import * as postcss from "postcss";
 import md5 from "./md5";
-import parser = require("postcss-value-parser");
+
+import processDecl from "./processDecl";
 import parseExpression, { ParserNodes } from "./parseExpression";
 import readVariables from "./readVariables";
 
@@ -15,6 +16,7 @@ import readVariables from "./readVariables";
 declare interface Option {
   from: string;
 }
+
 
 
 export default plugin("postcss-shared-options", function(opts: Option) {
@@ -78,21 +80,8 @@ export default plugin("postcss-shared-options", function(opts: Option) {
               rootRule.append(decl);
             });
           });
-
           css.walkDecls((decl) => {
-            if (/var/.test(decl.value)) {
-              const p = parser(decl.value);
-              p.nodes.forEach((node) => {
-                if (node.type === "function" && node.value === "var") {
-                  node.nodes.forEach((n) => {
-                    if (n.type === "word") {
-                      n.value = mapVars[n.value] || n.value;
-                    }
-                  });
-                }
-              });
-              decl.value = p.toString();
-            }
+            decl.value = processDecl(decl.value, mapVars)
           });
         });
   };

@@ -36,3 +36,10 @@ test("test base.3.css", t => {
     "expected/base.3.css"
   );
 });
+
+test("test base.3.css", t => {
+  return run(t,
+    "fixtures/base.multiple-func.css",
+    "expected/base.multiple-func.css"
+  );
+});
