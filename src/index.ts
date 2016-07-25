@@ -11,13 +11,12 @@ import md5 from "./md5";
 import processDecl from "./processDecl";
 import parseExpression, { ParserNodes } from "./parseExpression";
 import readVariables from "./readVariables";
+import * as path from "path";
 
 
 declare interface Option {
   from: string;
 }
-
-
 
 export default plugin("postcss-shared-options", function(opts: Option) {
   return function(css: Container) {
@@ -28,9 +27,10 @@ export default plugin("postcss-shared-options", function(opts: Option) {
       expr && confs.push(expr);
       shared.remove();
     });
+    const optsFrom = opts.from || "";
     return Promise.all(confs.map(
-      (conf) => readVariables(conf.path, opts.from || "")
-        .then((vars)=> {
+      (conf) => readVariables(conf.path, optsFrom)
+        .then((vars) => {
           const buf: { [key: string]: string } = {};
           const values = _.reduce(vars.values, (memo, val, key) => {
             if (conf.values.indexOf(key) > -1) {
@@ -57,7 +57,8 @@ export default plugin("postcss-shared-options", function(opts: Option) {
         (imports) => {
           const mapVars: { [key: string]: string } = {};
           imports.forEach((c) => {
-            const hashImport = md5(c.file + hash);
+            const relPath = path.relative(optsFrom, c.path);
+            const hashImport = md5(relPath + hash);
 
             let rootRule: postcss.Rule = null;
             css.walkRules(":root", (root) => {
@@ -69,7 +70,6 @@ export default plugin("postcss-shared-options", function(opts: Option) {
               });
               css.prepend(rootRule);
             }
-
             _.each(c.values, (value, p) => {
               const prop = p + "-" + hashImport;
               mapVars[p] = prop;
@@ -81,7 +81,7 @@ export default plugin("postcss-shared-options", function(opts: Option) {
             });
           });
           css.walkDecls((decl) => {
-            decl.value = processDecl(decl.value, mapVars)
+            decl.value = processDecl(decl.value, mapVars);
           });
         });
   };
