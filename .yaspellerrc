@@ -1,0 +1,16 @@
+{
+  "checkYo": true,
+  "lang": "en,ru",
+  "format": "auto",
+  "fileExtensions": [".md"],
+  "excludeFiles":[
+    "yaspeller",
+    "node_modules",
+    "typings",
+    "lib",
+    "src"
+  ],
+  "dictionary": [
+    "PostCSS"
+  ]
+}
