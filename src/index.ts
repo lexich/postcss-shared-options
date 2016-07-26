@@ -21,7 +21,7 @@ declare interface Option {
 
 export default plugin("postcss-shared-options", function(opts: Option) {
   return function(css: Container) {
-    const hash = "123456"; // Fix md5(css.source.input.css);
+    const hash = md5(css.source.input.css);
     const confs: Array<ParserNodes> = [];
     css.walkAtRules("shared", (shared) => {
       const expr = parseExpression(shared.params);
