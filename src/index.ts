@@ -14,6 +14,7 @@ import readVariables from "./readVariables";
 import * as path from "path";
 
 
+
 declare interface Option {
   from: string;
 }
@@ -28,8 +29,9 @@ export default plugin("postcss-shared-options", function(opts: Option) {
       shared.remove();
     });
     const optsFrom = opts.from || "";
+    const read = _.memoize(readVariables);
     return Promise.all(confs.map(
-      (conf) => readVariables(conf.path, optsFrom)
+      (conf) => read(conf.path, optsFrom)
         .then((vars) => {
           const buf: { [key: string]: string } = {};
           const values = _.reduce(vars.values, (memo, val, key) => {

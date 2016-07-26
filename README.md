@@ -15,7 +15,7 @@
 ```
 
 ```css
-@shared --root-width from "./vars.css"
+@shared --root-width from "./vars.css";
 .foo {
     width: var(--root-width);
     height: calc(var(--root-width) * 2);
