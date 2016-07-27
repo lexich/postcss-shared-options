@@ -36,10 +36,9 @@
     "yaspeller": "^2.8.2"
   },
   "scripts": {
-    "test": "npm run tslint && npm run ava",
+    "test": "npm run tslint && npm run compile && npm run ava",
     "tslint": "node_modules/.bin/tslint src/*.ts",
     "ava": "node_modules/.bin/ava ./tests",
-    "tsc": "node_modules/.bin/tsc --outDir lib src/*.ts",
     "yaspeller": "node_modules/.bin/yaspeller .",
     "compile": "node_modules/.bin/tsc --project tsconfig.json",
     "watch": "node_modules/.bin/tsc -watch --project tsconfig.json"
