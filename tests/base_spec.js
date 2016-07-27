@@ -3,7 +3,7 @@ import test  from "ava";
 import fs    from "fs";
 import plugin from "../lib";
 
-function run(t, inputPath, outputPath, opts = { }) {
+function run(t, inputPath, outputPath, opts = { }, warnings = []) {
   opts.from = inputPath;
   const input = fs.readFileSync(inputPath, "utf8");
   const output = fs.readFileSync(outputPath, "utf8");
@@ -12,7 +12,9 @@ function run(t, inputPath, outputPath, opts = { }) {
     .then( result => {
       fs.writeFileSync(outputPath + ".log", result.css);
       t.deepEqual(result.css, output);
-      t.deepEqual(result.warnings().length, 0);
+
+      const warns = result.warnings().map((err)=> err.text);
+      t.deepEqual(warns, warnings);
     });
 }
 
@@ -47,6 +49,11 @@ test("test base.3.css", t => {
 test("test base.error.css", t => {
   return run(t,
     "fixtures/base.error.css",
-    "expected/base.error.css"
+    "expected/base.error.css",
+    {},
+    [
+      "Invalid expression: @shared --color-red from \"./base.vars.css\" hello",
+      "Variables doesn't exists: --color-black"
+    ]
   );
 });

@@ -20,13 +20,13 @@ declare interface Option {
 }
 
 export default plugin("postcss-shared-options", function(opts: Option) {
-  return function(css: Container) {
+  return function(css: Container, result: Result) {
     const hash = md5(css.source.input.css);
     const confs: Array<ParserNodes> = [];
     css.walkAtRules("shared", (shared) => {
       const expr = parseExpression(shared.params);
       if (expr.error) {
-        shared.error(expr.error, { plugin: "postcss-shared-options" });
+        shared.warn(result, expr.error, { plugin: "postcss-shared-options" });
       } else {
         confs.push(expr);
         shared.remove();
@@ -38,13 +38,23 @@ export default plugin("postcss-shared-options", function(opts: Option) {
       (conf) => read(conf.path, optsFrom)
         .then((vars) => {
           const buf: { [key: string]: string } = {};
+          const varsKeys = Object.keys(vars.values);
+
+          // test that export variable exists
+          const errors = conf.values.reduce((memo, key)=> {
+            if (varsKeys.indexOf(key) === -1) {
+              memo[memo.length] = key;
+            }
+            return memo;
+          }, []);
+
           const values = _.reduce(vars.values, (memo, val, key) => {
             if (conf.values.indexOf(key) > -1) {
               memo[key] = val;
             }
             return memo;
           }, buf);
-          return { path: vars.path, values };
+          return { path: vars.path, values, errors };
         })
     ))
       .then(
@@ -89,6 +99,17 @@ export default plugin("postcss-shared-options", function(opts: Option) {
               getRootRule().append(decl);
             });
           });
+          const allErrors = imports.reduce((memo, item) => {
+            return memo.concat(item.errors);
+          }, []);
+          if (allErrors.length && css.nodes[0]) {
+            const messages = allErrors.join(" ");
+            css.nodes[0].warn(
+              result,
+              `Variables doesn't exists: ${messages}`,
+              { plugin: "postcss-shared-options" }
+            );
+          }
           css.walkDecls((decl) => {
             decl.value = processDecl(decl.value, mapVars);
           });
