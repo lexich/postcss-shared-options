@@ -14,7 +14,7 @@ const rx = /^(.+)[ ]+from[ ]+[\'\"]{1}(.+)[\'\"]{1}$/;
 export default function parseExpression(expr: string): ParserNodes {
 
   const normExp = (expr || "").trim();
-  if(!rx.test(normExp)) {
+  if (!rx.test(normExp)) {
     return { values: [], path: "", error: `Invalid expression: @shared ${expr}` };
   }
   const params = RegExp.$1;

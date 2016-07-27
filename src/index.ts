@@ -41,7 +41,7 @@ export default plugin("postcss-shared-options", function(opts: Option) {
           const varsKeys = Object.keys(vars.values);
 
           // test that export variable exists
-          const errors = conf.values.reduce((memo, key)=> {
+          const errors = conf.values.reduce((memo, key) => {
             if (varsKeys.indexOf(key) === -1) {
               memo[memo.length] = key;
             }
@@ -88,7 +88,7 @@ export default plugin("postcss-shared-options", function(opts: Option) {
                 css.prepend(rootRule);
               }
               return rootRule;
-            }
+            };
             _.each(c.values, (value, p) => {
               const prop = p + "-" + hashImport;
               mapVars[p] = prop;
