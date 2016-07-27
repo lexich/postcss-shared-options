@@ -1,0 +1,2 @@
+@shared --color-red from "./base.vars.css" hello;
+@shared --color-black from "./base.vars.css";
