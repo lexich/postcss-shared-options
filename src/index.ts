@@ -25,8 +25,12 @@ export default plugin("postcss-shared-options", function(opts: Option) {
     const confs: Array<ParserNodes> = [];
     css.walkAtRules("shared", (shared) => {
       const expr = parseExpression(shared.params);
-      expr && confs.push(expr);
-      shared.remove();
+      if (expr.error) {
+        shared.error(expr.error, { plugin: "postcss-shared-options" });
+      } else {
+        confs.push(expr);
+        shared.remove();
+      }
     });
     const optsFrom = opts.from || "";
     const read = _.memoize(readVariables);
@@ -63,14 +67,17 @@ export default plugin("postcss-shared-options", function(opts: Option) {
             const hashImport = md5(relPath + hash);
 
             let rootRule: postcss.Rule = null;
-            css.walkRules(":root", (root) => {
-              !rootRule && (rootRule = root);
-            });
-            if (!rootRule) {
-              rootRule = postcss.rule({
-                selector: ":root"
+            const getRootRule = (): postcss.Rule => {
+              css.walkRules(":root", (root) => {
+                !rootRule && (rootRule = root);
               });
-              css.prepend(rootRule);
+              if (!rootRule) {
+                rootRule = postcss.rule({
+                  selector: ":root"
+                });
+                css.prepend(rootRule);
+              }
+              return rootRule;
             }
             _.each(c.values, (value, p) => {
               const prop = p + "-" + hashImport;
@@ -79,7 +86,7 @@ export default plugin("postcss-shared-options", function(opts: Option) {
                 value, prop,
                 raws: { before: "\n  " }
               });
-              rootRule.append(decl);
+              getRootRule().append(decl);
             });
           });
           css.walkDecls((decl) => {
