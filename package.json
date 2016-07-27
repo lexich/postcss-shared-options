@@ -1,6 +1,6 @@
 {
   "name": "postcss-shared-options",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "PostCSS plugin Share variables between different css files with scope",
   "keywords": [
     "postcss",
