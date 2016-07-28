@@ -8,7 +8,7 @@ import { plugin, Container, Result, Declaration } from "postcss";
 import * as postcss from "postcss";
 import md5 from "./md5";
 
-import processDecl from "./processDecl";
+import processVars from "./processVars";
 import parseExpression, { ParserNodes } from "./parseExpression";
 import readVariables, { Config } from "./readVariables";
 import * as path from "path";
@@ -111,8 +111,11 @@ export default plugin("postcss-shared-options", function(opts: Option) {
               { plugin: "postcss-shared-options" }
             );
           }
+          css.walkAtRules((atRule) => {
+             atRule.params = processVars(atRule.params, mapVars);
+          });
           css.walkDecls((decl) => {
-            decl.value = processDecl(decl.value, mapVars);
+            decl.value = processVars(decl.value, mapVars);
           });
         });
   };

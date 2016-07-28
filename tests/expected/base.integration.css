@@ -1,0 +1,13 @@
+:root {
+  --color-red-af149b: red;
+  --base-width-af149b: 24px
+}
+/* https://github.com/ismamz/postcss-utilities */
+.test {
+  @util circle(100%, var(--color-red-af149b));
+}
+
+/* media-query support */
+@media (max-width: var(--base-width-af149b)) {
+  @util circle(100%, var(--color-red-af149b));
+}

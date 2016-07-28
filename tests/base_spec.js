@@ -39,7 +39,7 @@ test("test base.3.css", t => {
   );
 });
 
-test("test base.3.css", t => {
+test("test base.multiple-func.css", t => {
   return run(t,
     "fixtures/base.multiple-func.css",
     "expected/base.multiple-func.css"
@@ -55,5 +55,12 @@ test("test base.error.css", t => {
       "Invalid expression: @shared --color-red from \"./base.vars.css\" hello",
       "Variables doesn't exists: --color-black"
     ]
+  );
+});
+
+test("test base.integrations.css", t => {
+  return run(t,
+    "fixtures/base.integration.css",
+    "expected/base.integration.css"
   );
 });

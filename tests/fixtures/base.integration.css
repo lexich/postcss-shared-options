@@ -1,0 +1,11 @@
+@shared --color-red --base-width from "./base.vars.css";
+
+/* https://github.com/ismamz/postcss-utilities */
+.test {
+  @util circle(100%, var(--color-red));
+}
+
+/* media-query support */
+@media (max-width: var(--base-width)) {
+  @util circle(100%, var(--color-red));
+}
