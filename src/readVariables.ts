@@ -22,10 +22,7 @@ export function readAST(filePath: string): Promise.IThenable<Result> {
       (resolve) => postcss([]).process(data).then(resolve)));
 }
 
-
-export default function readVariables(sourcePath: string, from: string): Promise.IThenable<Config> {
-  const dir = path.dirname(from);
-  const absPath = path.resolve(dir, sourcePath);
+export default function readVariables(absPath: string): Promise.IThenable<Config> {
   return readAST(absPath).then((css) => {
     const result: { [key: string]: string } = {};
     css.root.nodes.forEach((rule: Rule) => {

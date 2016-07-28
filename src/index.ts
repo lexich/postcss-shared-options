@@ -10,17 +10,18 @@ import md5 from "./md5";
 
 import processDecl from "./processDecl";
 import parseExpression, { ParserNodes } from "./parseExpression";
-import readVariables from "./readVariables";
+import readVariables, { Config } from "./readVariables";
 import * as path from "path";
 
-
-
 declare interface Option {
-  from: string;
+  from?: string;
 }
 
 export default plugin("postcss-shared-options", function(opts: Option) {
   return function(css: Container, result: Result) {
+    const dir = path.dirname(
+      css.source.input.file || opts.from || ""
+    );
     const hash = md5(css.source.input.css);
     const confs: Array<ParserNodes> = [];
     css.walkAtRules("shared", (shared) => {
@@ -32,10 +33,10 @@ export default plugin("postcss-shared-options", function(opts: Option) {
         shared.remove();
       }
     });
-    const optsFrom = opts.from || "";
-    const read = _.memoize(readVariables);
+    const read: (absPath: string) => Promise.IThenable<Config> = _.memoize(readVariables);
+
     return Promise.all(confs.map(
-      (conf) => read(conf.path, optsFrom)
+      (conf) => read(path.resolve(dir, conf.path))
         .then((vars) => {
           const buf: { [key: string]: string } = {};
           const varsKeys = Object.keys(vars.values);
@@ -73,7 +74,7 @@ export default plugin("postcss-shared-options", function(opts: Option) {
         (imports) => {
           const mapVars: { [key: string]: string } = {};
           imports.forEach((c) => {
-            const relPath = path.relative(optsFrom, c.path);
+            const relPath = path.relative(dir, c.path);
             const hashImport = md5(relPath + hash);
 
             let rootRule: postcss.Rule = null;

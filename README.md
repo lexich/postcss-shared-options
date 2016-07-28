@@ -1,7 +1,7 @@
 # PostCSS Shared Options 
 [![Build Status][ci-img]][ci] [![npm version](https://badge.fury.io/js/postcss-shared-options.svg)](https://badge.fury.io/js/postcss-shared-options)
 
-[PostCSS] plugin Share variables between different css files with scope.
+[PostCSS] plugin share variables between different css files with scope.
 
 [PostCSS]: https://github.com/postcss/postcss
 [ci-img]:  https://travis-ci.org/lexich/postcss-shared-options.svg
