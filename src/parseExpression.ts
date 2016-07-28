@@ -12,8 +12,7 @@ export declare interface ParserNodes {
 const rx = /^(.+)[ ]+from[ ]+[\'\"]{1}(.+)[\'\"]{1}$/;
 
 export default function parseExpression(expr: string): ParserNodes {
-
-  const normExp = (expr || "").trim();
+  const normExp = (expr || "").trim().replace(/\n/g, " ");
   if (!rx.test(normExp)) {
     return { values: [], path: "", error: `Invalid expression: @shared ${expr}` };
   }

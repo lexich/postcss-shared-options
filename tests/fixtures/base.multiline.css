@@ -1,0 +1,12 @@
+@shared
+  --color-red
+  --base-width
+from "./base.vars.css";
+
+.test1 {
+  color: var(--color-red);
+}
+
+.test2 {
+  width: var(--base-width);
+}

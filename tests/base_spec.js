@@ -64,3 +64,10 @@ test("test base.integrations.css", t => {
     "expected/base.integration.css"
   );
 });
+
+test("test base.multiline.css", t => {
+  return run(t,
+    "fixtures/base.multiline.css",
+    "expected/base.multiline.css"
+  );
+});
